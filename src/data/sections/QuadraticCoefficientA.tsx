@@ -9,6 +9,7 @@ import {
     InlineClozeChoice,
     InlineFeedback,
     InlineFormula,
+    InlineTrigger,
     Cartesian2D,
 } from "@/components/atoms";
 import { InteractionHintSequence } from "@/components/atoms/visual/InteractionHint";
@@ -159,15 +160,31 @@ export const coefficientABlocks: ReactElement[] = [
         </Block>
     </StackLayout>,
 
-    // Direction explanation
+    // Direction explanation with triggers
     <StackLayout key="layout-coeff-a-direction" maxWidth="xl">
         <Block id="coeff-a-direction" padding="sm">
             <EditableParagraph id="para-coeff-a-direction" blockId="coeff-a-direction">
                 When{" "}
                 <InlineSpotColor varName="exploreA" color="#62D0AD">a</InlineSpotColor>{" "}
-                is positive, the parabola opens upward like a smile. When{" "}
+                is{" "}
+                <InlineTrigger
+                    id="trigger-positive-a"
+                    varName="exploreA"
+                    setValue={2}
+                    color="#62D0AD"
+                >
+                    positive
+                </InlineTrigger>, the parabola opens upward like a smile. When{" "}
                 <InlineSpotColor varName="exploreA" color="#62D0AD">a</InlineSpotColor>{" "}
-                is negative, it flips upside down like a frown. The sign of{" "}
+                is{" "}
+                <InlineTrigger
+                    id="trigger-negative-a"
+                    varName="exploreA"
+                    setValue={-2}
+                    color="#62D0AD"
+                >
+                    negative
+                </InlineTrigger>, it flips upside down like a frown. The sign of{" "}
                 <InlineSpotColor varName="exploreA" color="#62D0AD">a</InlineSpotColor>{" "}
                 determines which way the curve faces.
             </EditableParagraph>
@@ -198,7 +215,24 @@ export const coefficientABlocks: ReactElement[] = [
                 <EditableParagraph id="para-coeff-a-width-explanation" blockId="coeff-a-width-explanation">
                     The size of{" "}
                     <InlineSpotColor varName="exploreA" color="#62D0AD">a</InlineSpotColor>{" "}
-                    controls the width. When |a| {">"} 1, the parabola is narrower than the reference. When |a| {"<"} 1, it's wider. Drag the teal points on the curve up or down to see how the parabola stretches and compresses.
+                    controls the width. When |a| {">"} 1, the parabola is{" "}
+                    <InlineTrigger
+                        id="trigger-narrow-a"
+                        varName="exploreA"
+                        setValue={2.5}
+                        color="#62D0AD"
+                    >
+                        narrower
+                    </InlineTrigger>{" "}
+                    than the reference. When |a| {"<"} 1, it's{" "}
+                    <InlineTrigger
+                        id="trigger-wide-a"
+                        varName="exploreA"
+                        setValue={0.5}
+                        color="#62D0AD"
+                    >
+                        wider
+                    </InlineTrigger>. Drag the teal points on the curve up or down to see how the parabola stretches and compresses.
                 </EditableParagraph>
             </Block>
         </div>
