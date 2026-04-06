@@ -36,10 +36,12 @@ function IntroParabolaViz() {
     const COLOR_C = "#F7B23B"; // Amber for 'c'
     const COLOR_CURVE = "#6366f1"; // Soft indigo for f(x) curve
 
-    // Points on the curve for dragging 'a' - at symmetric x positions
-    const dragX = 2.5;
-    const dragY = a * dragX * dragX + b * dragX + c;
-    const dragYLeft = a * (-dragX) * (-dragX) + b * (-dragX) + c;
+    // Fixed y-level for the draggable points (they stay at this height)
+    const fixedY = 2;
+    // Calculate x position on the curve at the fixed y level: y = ax² + bx + c
+    // For simplicity with b=0, c=0: y = ax², so x = sqrt(y/a)
+    const rightX = a > 0 ? Math.sqrt((fixedY - c) / a) : 2;
+    const leftX = a > 0 ? -Math.sqrt((fixedY - c) / a) : -2;
 
     return (
         <div className="relative">
@@ -47,46 +49,44 @@ function IntroParabolaViz() {
                 height={350}
                 viewBox={{ x: [-6, 6], y: [-8, 6] }}
                 movablePoints={[
-                    // Right point on curve (teal 'a' point) - drag horizontally to change steepness
+                    // Right point - drag horizontally at fixed y to change curve width
                     {
-                        initial: [dragX, dragY],
+                        initial: [rightX, fixedY],
                         color: COLOR_A,
-                        position: [dragX, dragY],
+                        position: [rightX, fixedY],
                         constrain: (point) => {
-                            // Allow horizontal drag, compute y from the curve equation
-                            const x = Math.max(1, Math.min(4, point[0]));
-                            const y = a * x * x + b * x + c;
-                            return [x, y];
+                            // Keep y fixed, only allow horizontal movement
+                            const x = Math.max(0.5, Math.min(5, point[0]));
+                            return [x, fixedY];
                         },
                         onChange: (point) => {
-                            // From x position and y on curve, derive new 'a'
-                            // y = ax² + bx + c, so a = (y - bx - c) / x²
+                            // y = ax² + bx + c at this point
+                            // With the point at (x, fixedY): fixedY = ax² + bx + c
+                            // So a = (fixedY - bx - c) / x²
                             const x = point[0];
-                            if (x !== 0) {
-                                const newA = (point[1] - b * x - c) / (x * x);
-                                if (Math.abs(newA) <= 3 && Math.abs(newA) >= 0.25) {
+                            if (x > 0.3) {
+                                const newA = (fixedY - b * x - c) / (x * x);
+                                if (newA > 0.1 && newA <= 3) {
                                     setVar("coefficientA", Math.round(newA * 4) / 4);
                                 }
                             }
                         },
                     },
-                    // Left point on curve (teal 'a' point) - mirrors the right point
+                    // Left point - mirrors the right point horizontally
                     {
-                        initial: [-dragX, dragYLeft],
+                        initial: [leftX, fixedY],
                         color: COLOR_A,
-                        position: [-dragX, dragYLeft],
+                        position: [leftX, fixedY],
                         constrain: (point) => {
-                            // Allow horizontal drag, compute y from the curve equation
-                            const x = Math.min(-1, Math.max(-4, point[0]));
-                            const y = a * x * x + b * x + c;
-                            return [x, y];
+                            // Keep y fixed, only allow horizontal movement
+                            const x = Math.min(-0.5, Math.max(-5, point[0]));
+                            return [x, fixedY];
                         },
                         onChange: (point) => {
-                            // From x position and y on curve, derive new 'a'
                             const x = point[0];
-                            if (x !== 0) {
-                                const newA = (point[1] - b * x - c) / (x * x);
-                                if (Math.abs(newA) <= 3 && Math.abs(newA) >= 0.25) {
+                            if (x < -0.3) {
+                                const newA = (fixedY - b * x - c) / (x * x);
+                                if (newA > 0.1 && newA <= 3) {
                                     setVar("coefficientA", Math.round(newA * 4) / 4);
                                 }
                             }
@@ -126,6 +126,15 @@ function IntroParabolaViz() {
                         fn: (x: number) => a * x * x + b * x + c,
                         color: COLOR_CURVE,
                         weight: 3,
+                    },
+                    // Horizontal line at fixedY showing where the drag points are
+                    {
+                        type: "segment",
+                        point1: [leftX, fixedY],
+                        point2: [rightX, fixedY],
+                        color: COLOR_A,
+                        weight: 2,
+                        style: "dashed",
                     },
                     // Axis of symmetry (dashed)
                     {
@@ -237,7 +246,7 @@ export const introductionBlocks: ReactElement[] = [
             </Block>
             <Block id="intro-explore-instruction" padding="sm">
                 <EditableParagraph id="para-intro-explore-instruction" blockId="intro-explore-instruction">
-                    Drag the two teal points on the curve left and right to change the steepness. Or drag the amber point on the y-axis to shift the parabola up and down. In the next sections, we'll explore exactly what each coefficient does.
+                    Drag the two teal points horizontally to widen or narrow the parabola. Pulling them apart makes the curve wider, pushing them together makes it steeper. Or drag the amber point on the y-axis to shift everything up and down.
                 </EditableParagraph>
             </Block>
         </div>
