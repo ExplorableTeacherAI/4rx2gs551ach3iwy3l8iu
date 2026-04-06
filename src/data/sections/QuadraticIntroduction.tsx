@@ -39,9 +39,10 @@ function IntroParabolaViz() {
     // Fixed y-level for the draggable points (they stay at this height)
     const fixedY = 2;
     // Calculate x position on the curve at the fixed y level: y = ax² + bx + c
-    // For simplicity with b=0, c=0: y = ax², so x = sqrt(y/a)
-    const rightX = a > 0 ? Math.sqrt((fixedY - c) / a) : 2;
-    const leftX = a > 0 ? -Math.sqrt((fixedY - c) / a) : -2;
+    // For y = ax² + c (with b=0): fixedY = ax² + c, so x² = (fixedY - c) / a
+    const discriminant = (fixedY - c) / a;
+    const rightX = discriminant > 0 ? Math.sqrt(discriminant) : 2;
+    const leftX = discriminant > 0 ? -Math.sqrt(discriminant) : -2;
 
     return (
         <div className="relative">
@@ -67,7 +68,8 @@ function IntroParabolaViz() {
                             if (x > 0.3) {
                                 const newA = (fixedY - b * x - c) / (x * x);
                                 if (newA > 0.1 && newA <= 3) {
-                                    setVar("coefficientA", Math.round(newA * 4) / 4);
+                                    // Smooth continuous update (no rounding)
+                                    setVar("coefficientA", Math.round(newA * 20) / 20);
                                 }
                             }
                         },
@@ -87,7 +89,8 @@ function IntroParabolaViz() {
                             if (x < -0.3) {
                                 const newA = (fixedY - b * x - c) / (x * x);
                                 if (newA > 0.1 && newA <= 3) {
-                                    setVar("coefficientA", Math.round(newA * 4) / 4);
+                                    // Smooth continuous update (no rounding)
+                                    setVar("coefficientA", Math.round(newA * 20) / 20);
                                 }
                             }
                         },
@@ -99,7 +102,8 @@ function IntroParabolaViz() {
                         position: [0, c],
                         constrain: "vertical",
                         onChange: (point) => {
-                            const newC = Math.round(point[1]);
+                            // Smooth continuous update
+                            const newC = Math.round(point[1] * 4) / 4;
                             if (newC >= -6 && newC <= 5) {
                                 setVar("coefficientC", newC);
                             }
