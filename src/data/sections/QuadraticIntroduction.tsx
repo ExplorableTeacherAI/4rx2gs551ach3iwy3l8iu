@@ -33,31 +33,79 @@ function IntroParabolaViz() {
 
     // Color constants matching the formula
     const COLOR_A = "#62D0AD"; // Teal for 'a'
-    const COLOR_B = "#8E90F5"; // Indigo for 'b'
     const COLOR_C = "#F7B23B"; // Amber for 'c'
     const COLOR_CURVE = "#6366f1"; // Soft indigo for f(x) curve
+
+    // Points on the curve for dragging 'a' - at symmetric x positions
+    const dragX = 2.5;
+    const dragY = a * dragX * dragX + b * dragX + c;
+    const dragYLeft = a * (-dragX) * (-dragX) + b * (-dragX) + c;
 
     return (
         <div className="relative">
             <Cartesian2D
                 height={350}
-                viewBox={{ x: [-6, 6], y: [-6, 6] }}
+                viewBox={{ x: [-6, 6], y: [-8, 6] }}
                 movablePoints={[
-                    // Vertex point (teal - represents 'a' effect)
+                    // Right point on curve (teal 'a' point) - drag horizontally to change steepness
+                    {
+                        initial: [dragX, dragY],
+                        color: COLOR_A,
+                        position: [dragX, dragY],
+                        constrain: (point) => {
+                            // Allow horizontal drag, compute y from the curve equation
+                            const x = Math.max(1, Math.min(4, point[0]));
+                            const y = a * x * x + b * x + c;
+                            return [x, y];
+                        },
+                        onChange: (point) => {
+                            // From x position and y on curve, derive new 'a'
+                            // y = ax² + bx + c, so a = (y - bx - c) / x²
+                            const x = point[0];
+                            if (x !== 0) {
+                                const newA = (point[1] - b * x - c) / (x * x);
+                                if (Math.abs(newA) <= 3 && Math.abs(newA) >= 0.25) {
+                                    setVar("coefficientA", Math.round(newA * 4) / 4);
+                                }
+                            }
+                        },
+                    },
+                    // Left point on curve (teal 'a' point) - mirrors the right point
+                    {
+                        initial: [-dragX, dragYLeft],
+                        color: COLOR_A,
+                        position: [-dragX, dragYLeft],
+                        constrain: (point) => {
+                            // Allow horizontal drag, compute y from the curve equation
+                            const x = Math.min(-1, Math.max(-4, point[0]));
+                            const y = a * x * x + b * x + c;
+                            return [x, y];
+                        },
+                        onChange: (point) => {
+                            // From x position and y on curve, derive new 'a'
+                            const x = point[0];
+                            if (x !== 0) {
+                                const newA = (point[1] - b * x - c) / (x * x);
+                                if (Math.abs(newA) <= 3 && Math.abs(newA) >= 0.25) {
+                                    setVar("coefficientA", Math.round(newA * 4) / 4);
+                                }
+                            }
+                        },
+                    },
+                    // Vertex point (teal)
                     {
                         initial: [vertexX, vertexY],
                         color: COLOR_A,
                         position: [vertexX, vertexY],
                         constrain: "vertical",
                         onChange: (point) => {
-                            const newY = point[1];
-                            const newA = (newY - c) / (vertexX === 0 ? 1 : vertexX * vertexX);
-                            if (Math.abs(newA) <= 3 && Math.abs(newA) >= 0.1) {
-                                setVar("coefficientA", Math.round(newA * 2) / 2);
+                            const newC = Math.round(point[1]);
+                            if (newC >= -6 && newC <= 5) {
+                                setVar("coefficientC", newC);
                             }
                         },
                     },
-                    // Y-intercept point (amber - represents 'c')
+                    // Y-intercept point (amber 'c' point)
                     {
                         initial: [0, c],
                         color: COLOR_C,
@@ -65,7 +113,7 @@ function IntroParabolaViz() {
                         constrain: "vertical",
                         onChange: (point) => {
                             const newC = Math.round(point[1]);
-                            if (newC >= -5 && newC <= 5) {
+                            if (newC >= -6 && newC <= 5) {
                                 setVar("coefficientC", newC);
                             }
                         },
@@ -82,17 +130,8 @@ function IntroParabolaViz() {
                     // Axis of symmetry (dashed)
                     {
                         type: "segment",
-                        point1: [vertexX, -6],
+                        point1: [vertexX, -8],
                         point2: [vertexX, 6],
-                        color: "#94a3b8",
-                        weight: 1,
-                        style: "dashed",
-                    },
-                    // Visual indicator connecting vertex to y-intercept
-                    {
-                        type: "segment",
-                        point1: [vertexX, vertexY],
-                        point2: [0, c],
                         color: "#94a3b8",
                         weight: 1,
                         style: "dashed",
@@ -103,9 +142,9 @@ function IntroParabolaViz() {
                 hintKey="intro-parabola-drag"
                 steps={[
                     {
-                        gesture: "drag-vertical",
-                        label: "Drag the teal vertex or amber y-intercept point",
-                        position: { x: "50%", y: "45%" },
+                        gesture: "drag-horizontal",
+                        label: "Drag the teal points on the curve to change steepness",
+                        position: { x: "75%", y: "25%" },
                     },
                 ]}
             />
@@ -198,7 +237,7 @@ export const introductionBlocks: ReactElement[] = [
             </Block>
             <Block id="intro-explore-instruction" padding="sm">
                 <EditableParagraph id="para-intro-explore-instruction" blockId="intro-explore-instruction">
-                    Drag the teal vertex point in the graph up and down, or scrub the values above. Watch how the parabola transforms as each coefficient changes. In the next sections, we'll explore exactly what each coefficient does.
+                    Drag the two teal points on the curve left and right to change the steepness. Or drag the amber point on the y-axis to shift the parabola up and down. In the next sections, we'll explore exactly what each coefficient does.
                 </EditableParagraph>
             </Block>
         </div>
