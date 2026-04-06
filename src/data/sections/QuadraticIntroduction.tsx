@@ -92,19 +92,6 @@ function IntroParabolaViz() {
                             }
                         },
                     },
-                    // Vertex point (teal)
-                    {
-                        initial: [vertexX, vertexY],
-                        color: COLOR_A,
-                        position: [vertexX, vertexY],
-                        constrain: "vertical",
-                        onChange: (point) => {
-                            const newC = Math.round(point[1]);
-                            if (newC >= -6 && newC <= 5) {
-                                setVar("coefficientC", newC);
-                            }
-                        },
-                    },
                     // Y-intercept point (amber 'c' point)
                     {
                         initial: [0, c],
