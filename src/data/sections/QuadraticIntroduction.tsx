@@ -121,6 +121,7 @@ function IntroParabolaViz() {
                         },
                     },
                 ]}
+                highlightVarName="introFormulaHighlight"
                 plots={[
                     // Main parabola curve
                     {
@@ -128,6 +129,7 @@ function IntroParabolaViz() {
                         fn: (x: number) => a * x * x + b * x + c,
                         color: COLOR_CURVE,
                         weight: 3,
+                        highlightId: "fx",
                     },
                     // Horizontal line at fixedY showing where the drag points are
                     {
@@ -212,11 +214,11 @@ export const introductionBlocks: ReactElement[] = [
         </Block>
     </StackLayout>,
 
-    // Interactive formula with matching curve color
+    // Interactive formula with matching curve color and hover highlight
     <StackLayout key="layout-intro-interactive-formula" maxWidth="xl">
         <Block id="intro-interactive-formula" padding="md">
             <FormulaBlock
-                latex="\clr{fx}{f(x)} = \scrub{coefficientA}x^2 + \scrub{coefficientB}x + \scrub{coefficientC}"
+                latex="\highlight{introFormulaHighlight}{fx}{f(x)} = \scrub{coefficientA}x^2 + \scrub{coefficientB}x + \scrub{coefficientC}"
                 variables={scrubVarsFromDefinitions(["coefficientA", "coefficientB", "coefficientC"])}
                 colorMap={{ fx: "#6366f1" }}
             />

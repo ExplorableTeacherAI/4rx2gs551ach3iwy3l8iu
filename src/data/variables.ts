@@ -217,6 +217,15 @@ export const variableDefinitions: Record<string, VariableDefinition> = {
         color: '#62D0AD',
         bgColor: 'rgba(98, 208, 173, 0.15)',
     },
+
+    introFormulaHighlight: {
+        defaultValue: '',
+        type: 'linkedHighlight',
+        label: 'Introduction Formula Highlight',
+        description: 'For linking f(x) in formula to the curve in visualization',
+        color: '#6366f1',
+        bgColor: 'rgba(99, 102, 241, 0.15)',
+    },
 };
 
 /**
