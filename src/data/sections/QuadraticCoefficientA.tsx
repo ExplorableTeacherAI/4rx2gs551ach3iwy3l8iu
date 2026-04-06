@@ -34,9 +34,14 @@ function CoefficientAViz() {
     const pointX = 2;
     const curveY = a * pointX * pointX;
 
+    // Use a key based on 'a' to force re-render when value changes externally (e.g., from triggers)
+    // Round to avoid key changes during smooth dragging
+    const vizKey = `coeff-a-viz-${Math.round(a * 10)}`;
+
     return (
         <div className="relative">
             <Cartesian2D
+                key={vizKey}
                 height={350}
                 viewBox={{ x: [-5, 5], y: [-5, 5] }}
                 movablePoints={[
