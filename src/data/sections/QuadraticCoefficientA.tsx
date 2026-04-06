@@ -170,7 +170,7 @@ export const coefficientABlocks: ReactElement[] = [
                 <InlineTrigger
                     id="trigger-positive-a"
                     varName="exploreA"
-                    setValue={2}
+                    value={2}
                     color="#62D0AD"
                 >
                     positive
@@ -180,7 +180,7 @@ export const coefficientABlocks: ReactElement[] = [
                 <InlineTrigger
                     id="trigger-negative-a"
                     varName="exploreA"
-                    setValue={-2}
+                    value={-2}
                     color="#62D0AD"
                 >
                     negative
@@ -219,7 +219,7 @@ export const coefficientABlocks: ReactElement[] = [
                     <InlineTrigger
                         id="trigger-narrow-a"
                         varName="exploreA"
-                        setValue={2.5}
+                        value={2.5}
                         color="#62D0AD"
                     >
                         narrower
@@ -228,7 +228,7 @@ export const coefficientABlocks: ReactElement[] = [
                     <InlineTrigger
                         id="trigger-wide-a"
                         varName="exploreA"
-                        setValue={0.5}
+                        value={0.5}
                         color="#62D0AD"
                     >
                         wider
