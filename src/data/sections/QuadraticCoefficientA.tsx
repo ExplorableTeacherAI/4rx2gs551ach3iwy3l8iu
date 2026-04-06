@@ -31,7 +31,7 @@ function CoefficientAViz() {
 
     // Points on the curve at x = ±2 (symmetrical)
     const pointX = 2;
-    const pointY = a * pointX * pointX;
+    const curveY = a * pointX * pointX;
 
     return (
         <div className="relative">
@@ -39,39 +39,41 @@ function CoefficientAViz() {
                 height={350}
                 viewBox={{ x: [-5, 5], y: [-5, 5] }}
                 movablePoints={[
-                    // Right point on curve (x = 2) - drag horizontally to change 'a'
+                    // Right point on curve (x = 2) - drag vertically to change 'a'
                     {
-                        initial: [pointX, pointY],
+                        initial: [pointX, a * pointX * pointX],
                         color: COLOR_A,
-                        position: [pointX, pointY],
+                        position: [pointX, a * pointX * pointX],
                         constrain: (point) => {
-                            // Constrain point to stay on a vertical line at x = 2
-                            // but also constrain y to valid 'a' range
-                            const newY = Math.max(-5, Math.min(5, point[1]));
+                            // Constrain to vertical line at x = 2, limit y range
+                            const newY = Math.max(-4.8, Math.min(4.8, point[1]));
                             return [pointX, newY];
                         },
                         onChange: (point) => {
                             // y = a * x² at x = 2, so a = y / 4
                             const newA = point[1] / (pointX * pointX);
-                            if (Math.abs(newA) <= 3 && Math.abs(newA) >= 0.5) {
-                                setVar("exploreA", Math.round(newA * 2) / 2);
+                            // Round to nearest 0.1 to match step
+                            const roundedA = Math.round(newA * 10) / 10;
+                            if (roundedA >= -3 && roundedA <= 3 && roundedA !== 0) {
+                                setVar("exploreA", roundedA);
                             }
                         },
                     },
                     // Left point on curve (x = -2) - mirrors the right point
                     {
-                        initial: [-pointX, pointY],
+                        initial: [-pointX, a * pointX * pointX],
                         color: COLOR_A,
-                        position: [-pointX, pointY],
+                        position: [-pointX, a * pointX * pointX],
                         constrain: (point) => {
-                            const newY = Math.max(-5, Math.min(5, point[1]));
+                            const newY = Math.max(-4.8, Math.min(4.8, point[1]));
                             return [-pointX, newY];
                         },
                         onChange: (point) => {
                             // y = a * x² at x = -2, so a = y / 4
                             const newA = point[1] / (pointX * pointX);
-                            if (Math.abs(newA) <= 3 && Math.abs(newA) >= 0.5) {
-                                setVar("exploreA", Math.round(newA * 2) / 2);
+                            const roundedA = Math.round(newA * 10) / 10;
+                            if (roundedA >= -3 && roundedA <= 3 && roundedA !== 0) {
+                                setVar("exploreA", roundedA);
                             }
                         },
                     },
@@ -104,7 +106,7 @@ function CoefficientAViz() {
                     {
                         type: "segment",
                         point1: [pointX, 0],
-                        point2: [pointX, pointY],
+                        point2: [pointX, curveY],
                         color: COLOR_A,
                         weight: 2,
                         style: "dashed",
@@ -112,7 +114,7 @@ function CoefficientAViz() {
                     {
                         type: "segment",
                         point1: [-pointX, 0],
-                        point2: [-pointX, pointY],
+                        point2: [-pointX, curveY],
                         color: COLOR_A,
                         weight: 2,
                         style: "dashed",
