@@ -1,12 +1,12 @@
 /**
  * Variables Configuration
  * =======================
- * 
+ *
  * CENTRAL PLACE TO DEFINE ALL SHARED VARIABLES
- * 
+ *
  * This file defines all variables that can be shared across sections.
  * AI agents should read this file to understand what variables are available.
- * 
+ *
  * USAGE:
  * 1. Define variables here with their default values and metadata
  * 2. Use them in any section with: const x = useVar('variableName', defaultValue)
@@ -53,108 +53,170 @@ export interface VariableDefinition {
 
 /**
  * =====================================================
- * 🎯 DEFINE YOUR VARIABLES HERE
+ * 🎯 QUADRATIC FUNCTIONS LESSON VARIABLES
  * =====================================================
- * 
- * SUPPORTED TYPES:
- * 
- * 1. NUMBER (slider):
- *    { defaultValue: 5, type: 'number', min: 0, max: 10, step: 1 }
- * 
- * 2. TEXT (free text):
- *    { defaultValue: 'Hello', type: 'text', placeholder: 'Enter text...' }
- * 
- * 3. SELECT (dropdown):
- *    { defaultValue: 'sine', type: 'select', options: ['sine', 'cosine', 'tangent'] }
- * 
- * 4. BOOLEAN (toggle):
- *    { defaultValue: true, type: 'boolean' }
- * 
- * 5. ARRAY (list of numbers):
- *    { defaultValue: [1, 2, 3], type: 'array' }
- * 
- * 6. OBJECT (complex data):
- *    { defaultValue: { x: 5, y: 10 }, type: 'object', schema: '{ x: number, y: number }' }
  */
 export const variableDefinitions: Record<string, VariableDefinition> = {
-    // ========================================
-    // ADD YOUR VARIABLES HERE
-    // ========================================
-
-    // Uncomment and modify these examples for your lesson:
-
-    /*
     // ─────────────────────────────────────────
-    // NUMBER - Use with sliders
+    // COEFFICIENT VARIABLES
     // ─────────────────────────────────────────
-    myValue: {
-        defaultValue: 5,
+    coefficientA: {
+        defaultValue: 1,
         type: 'number',
-        label: 'My Value',
-        description: 'A number that controls something',
-        unit: 'm',           // optional unit display
-        min: 0,
-        max: 10,
+        label: 'Coefficient a',
+        description: 'Controls parabola direction and width',
+        min: -3,
+        max: 3,
         step: 0.5,
+        color: '#62D0AD', // Soft teal
+    },
+
+    coefficientB: {
+        defaultValue: 0,
+        type: 'number',
+        label: 'Coefficient b',
+        description: 'Controls horizontal shift and vertex position',
+        min: -4,
+        max: 4,
+        step: 0.5,
+        color: '#8E90F5', // Soft indigo
+    },
+
+    coefficientC: {
+        defaultValue: 0,
+        type: 'number',
+        label: 'Coefficient c',
+        description: 'Controls vertical shift (y-intercept)',
+        min: -5,
+        max: 5,
+        step: 0.5,
+        color: '#F7B23B', // Warm amber
     },
 
     // ─────────────────────────────────────────
-    // TEXT - Free text input
+    // SECTION-SPECIFIC EXPLORATION VARIABLES
     // ─────────────────────────────────────────
-    lessonTitle: {
-        defaultValue: 'My Lesson',
-        type: 'text',
-        label: 'Lesson Title',
-        description: 'The title of your lesson',
-        placeholder: 'Enter a title...',
+    exploreA: {
+        defaultValue: 1,
+        type: 'number',
+        label: 'Explore a',
+        description: 'For the a coefficient section',
+        min: -3,
+        max: 3,
+        step: 0.5,
+        color: '#62D0AD',
+    },
+
+    exploreC: {
+        defaultValue: 0,
+        type: 'number',
+        label: 'Explore c',
+        description: 'For the c coefficient section',
+        min: -5,
+        max: 5,
+        step: 1,
+        color: '#F7B23B',
+    },
+
+    exploreB: {
+        defaultValue: 0,
+        type: 'number',
+        label: 'Explore b',
+        description: 'For the b coefficient section',
+        min: -4,
+        max: 4,
+        step: 0.5,
+        color: '#8E90F5',
     },
 
     // ─────────────────────────────────────────
-    // SELECT - Dropdown with options
+    // ASSESSMENT VARIABLES
     // ─────────────────────────────────────────
-    difficulty: {
-        defaultValue: 'medium',
+    answerDirectionPositive: {
+        defaultValue: '',
         type: 'select',
-        label: 'Difficulty',
-        description: 'The difficulty level of the lesson',
-        options: ['easy', 'medium', 'hard', 'expert'],
+        label: 'Direction Answer (Positive a)',
+        description: 'Student answer for parabola direction when a > 0',
+        placeholder: '???',
+        correctAnswer: 'upward',
+        options: ['upward', 'downward', 'left', 'right'],
+        color: '#62D0AD',
+    },
+
+    answerDirectionNegative: {
+        defaultValue: '',
+        type: 'select',
+        label: 'Direction Answer (Negative a)',
+        description: 'Student answer for parabola direction when a < 0',
+        placeholder: '???',
+        correctAnswer: 'downward',
+        options: ['upward', 'downward', 'left', 'right'],
+        color: '#62D0AD',
+    },
+
+    answerYIntercept: {
+        defaultValue: '',
+        type: 'text',
+        label: 'Y-Intercept Answer',
+        description: 'Student answer for y-intercept question',
+        placeholder: '?',
+        correctAnswer: '3',
+        color: '#F7B23B',
+    },
+
+    answerWidthComparison: {
+        defaultValue: '',
+        type: 'select',
+        label: 'Width Comparison Answer',
+        description: 'Student answer comparing parabola widths',
+        placeholder: '???',
+        correctAnswer: 'narrower',
+        options: ['wider', 'narrower', 'same width'],
+        color: '#62D0AD',
+    },
+
+    answerVertexX: {
+        defaultValue: '',
+        type: 'text',
+        label: 'Vertex X Answer',
+        description: 'Student answer for vertex x-coordinate',
+        placeholder: '?',
+        correctAnswer: '-1',
+        color: '#8E90F5',
+    },
+
+    answerSketchDirection: {
+        defaultValue: '',
+        type: 'select',
+        label: 'Sketch Direction Answer',
+        description: 'Student answer for sketch question direction',
+        placeholder: '???',
+        correctAnswer: 'downward',
+        options: ['upward', 'downward'],
+        color: '#AC8BF9',
+    },
+
+    answerSketchYIntercept: {
+        defaultValue: '',
+        type: 'text',
+        label: 'Sketch Y-Intercept Answer',
+        description: 'Student answer for sketch question y-intercept',
+        placeholder: '?',
+        correctAnswer: '2',
+        color: '#AC8BF9',
     },
 
     // ─────────────────────────────────────────
-    // BOOLEAN - Toggle switch
+    // HIGHLIGHT VARIABLES
     // ─────────────────────────────────────────
-    showHints: {
-        defaultValue: true,
-        type: 'boolean',
-        label: 'Show Hints',
-        description: 'Toggle to show or hide hints',
+    quadraticHighlight: {
+        defaultValue: '',
+        type: 'linkedHighlight',
+        label: 'Quadratic Highlight',
+        description: 'For linking prose to visualization elements',
+        color: '#62D0AD',
+        bgColor: 'rgba(98, 208, 173, 0.15)',
     },
-
-    // ─────────────────────────────────────────
-    // ARRAY - List of numbers
-    // ─────────────────────────────────────────
-    dataPoints: {
-        defaultValue: [1, 4, 9, 16, 25],
-        type: 'array',
-        label: 'Data Points',
-        description: 'Y-values for plotting a graph',
-    },
-
-    // ─────────────────────────────────────────
-    // OBJECT - Complex structured data
-    // ─────────────────────────────────────────
-    graphSettings: {
-        defaultValue: { 
-            xMin: -10, 
-            xMax: 10, 
-            showGrid: true 
-        },
-        type: 'object',
-        label: 'Graph Settings',
-        description: 'Configuration for the graph display',
-        schema: '{ xMin: number, xMax: number, showGrid: boolean }',
-    },
-    */
 };
 
 /**
