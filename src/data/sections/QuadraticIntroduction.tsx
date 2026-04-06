@@ -38,11 +38,22 @@ function IntroParabolaViz() {
 
     // Fixed y-level for the draggable points (they stay at this height)
     const fixedY = 2;
-    // Calculate x position on the curve at the fixed y level: y = ax² + bx + c
-    // For y = ax² + c (with b=0): fixedY = ax² + c, so x² = (fixedY - c) / a
-    const discriminant = (fixedY - c) / a;
-    const rightX = discriminant > 0 ? Math.sqrt(discriminant) : 2;
-    const leftX = discriminant > 0 ? -Math.sqrt(discriminant) : -2;
+    // Calculate x positions on the curve at the fixed y level: y = ax² + bx + c
+    // Solving ax² + bx + c = fixedY → ax² + bx + (c - fixedY) = 0
+    // Using quadratic formula: x = (-b ± √(b² - 4a(c - fixedY))) / (2a)
+    const disc = b * b - 4 * a * (c - fixedY);
+    let rightX = 2;
+    let leftX = -2;
+    if (disc >= 0 && a !== 0) {
+        const sqrtDisc = Math.sqrt(disc);
+        const x1 = (-b + sqrtDisc) / (2 * a);
+        const x2 = (-b - sqrtDisc) / (2 * a);
+        rightX = Math.max(x1, x2);
+        leftX = Math.min(x1, x2);
+        // Clamp to reasonable bounds
+        rightX = Math.max(0.5, Math.min(5, rightX));
+        leftX = Math.max(-5, Math.min(-0.5, leftX));
+    }
 
     return (
         <div className="relative">
