@@ -67,7 +67,7 @@ export const variableDefinitions: Record<string, VariableDefinition> = {
         description: 'Controls parabola direction and width',
         min: -3,
         max: 3,
-        step: 0.5,
+        step: 0.1,
         color: '#62D0AD', // Soft teal
     },
 
@@ -78,7 +78,7 @@ export const variableDefinitions: Record<string, VariableDefinition> = {
         description: 'Controls horizontal shift and vertex position',
         min: -4,
         max: 4,
-        step: 0.5,
+        step: 0.1,
         color: '#8E90F5', // Soft indigo
     },
 
@@ -89,7 +89,7 @@ export const variableDefinitions: Record<string, VariableDefinition> = {
         description: 'Controls vertical shift (y-intercept)',
         min: -5,
         max: 5,
-        step: 0.5,
+        step: 0.1,
         color: '#F7B23B', // Warm amber
     },
 
@@ -103,7 +103,7 @@ export const variableDefinitions: Record<string, VariableDefinition> = {
         description: 'For the a coefficient section',
         min: -3,
         max: 3,
-        step: 0.5,
+        step: 0.1,
         color: '#62D0AD',
     },
 
@@ -114,7 +114,7 @@ export const variableDefinitions: Record<string, VariableDefinition> = {
         description: 'For the c coefficient section',
         min: -5,
         max: 5,
-        step: 1,
+        step: 0.1,
         color: '#F7B23B',
     },
 
@@ -125,7 +125,7 @@ export const variableDefinitions: Record<string, VariableDefinition> = {
         description: 'For the b coefficient section',
         min: -4,
         max: 4,
-        step: 0.5,
+        step: 0.1,
         color: '#8E90F5',
     },
 
