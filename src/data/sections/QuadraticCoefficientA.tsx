@@ -12,6 +12,7 @@ import {
     Cartesian2D,
 } from "@/components/atoms";
 import { InteractionHintSequence } from "@/components/atoms/visual/InteractionHint";
+import { TriggeredHintOverlay } from "@/components/atoms/visual/TriggeredHintOverlay";
 import {
     getVariableInfo,
     numberPropsFromDefinition,
@@ -128,6 +129,9 @@ function CoefficientAViz() {
                     },
                 ]}
             />
+            {/* Triggered hint overlay for feedback-driven guidance */}
+            <TriggeredHintOverlay hintKey="feedback-direction-positive" />
+            <TriggeredHintOverlay hintKey="feedback-width-comparison" />
         </div>
     );
 }
