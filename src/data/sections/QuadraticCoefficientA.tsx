@@ -19,13 +19,18 @@ import {
 } from "../variables";
 import { useVar, useSetVar } from "@/stores";
 
-// Reactive visualization for coefficient a
+// Reactive visualization for coefficient a with two draggable points on the curve
 function CoefficientAViz() {
     const a = useVar("exploreA", 1) as number;
     const setVar = useSetVar();
 
-    // Calculate vertex position (at origin for simplicity)
-    const vertexY = 0;
+    // Color constants
+    const COLOR_A = "#62D0AD"; // Teal for 'a' coefficient
+    const COLOR_CURVE = "#6366f1"; // Soft indigo for f(x) curve
+
+    // Points on the curve at x = ±2 (symmetrical)
+    const pointX = 2;
+    const pointY = a * pointX * pointX;
 
     return (
         <div className="relative">
@@ -33,26 +38,45 @@ function CoefficientAViz() {
                 height={350}
                 viewBox={{ x: [-5, 5], y: [-5, 5] }}
                 movablePoints={[
+                    // Right point on curve (x = 2) - drag horizontally to change 'a'
                     {
-                        initial: [0, vertexY],
-                        color: "#62D0AD",
-                        position: [0, vertexY],
-                        constrain: "vertical",
+                        initial: [pointX, pointY],
+                        color: COLOR_A,
+                        position: [pointX, pointY],
+                        constrain: (point) => {
+                            // Constrain point to stay on a vertical line at x = 2
+                            // but also constrain y to valid 'a' range
+                            const newY = Math.max(-5, Math.min(5, point[1]));
+                            return [pointX, newY];
+                        },
                         onChange: (point) => {
-                            // Dragging vertex adjusts 'a' based on the point at x=1
-                            // At x=1, y = a, so we can infer a from how the curve changes
-                            // For intuitive feel, we map vertical drag to a change
-                            const newY = point[1];
-                            // This creates a nice feel where dragging up makes the parabola narrower
-                            const newA = Math.max(-3, Math.min(3, newY === 0 ? 1 : (newY > 0 ? newY : newY)));
-                            if (Math.abs(newA) >= 0.5) {
+                            // y = a * x² at x = 2, so a = y / 4
+                            const newA = point[1] / (pointX * pointX);
+                            if (Math.abs(newA) <= 3 && Math.abs(newA) >= 0.5) {
+                                setVar("exploreA", Math.round(newA * 2) / 2);
+                            }
+                        },
+                    },
+                    // Left point on curve (x = -2) - mirrors the right point
+                    {
+                        initial: [-pointX, pointY],
+                        color: COLOR_A,
+                        position: [-pointX, pointY],
+                        constrain: (point) => {
+                            const newY = Math.max(-5, Math.min(5, point[1]));
+                            return [-pointX, newY];
+                        },
+                        onChange: (point) => {
+                            // y = a * x² at x = -2, so a = y / 4
+                            const newA = point[1] / (pointX * pointX);
+                            if (Math.abs(newA) <= 3 && Math.abs(newA) >= 0.5) {
                                 setVar("exploreA", Math.round(newA * 2) / 2);
                             }
                         },
                     },
                 ]}
                 plots={[
-                    // Reference parabola y = x² (dashed)
+                    // Reference parabola y = x² (dashed grey)
                     {
                         type: "function",
                         fn: (x: number) => x * x,
@@ -64,23 +88,31 @@ function CoefficientAViz() {
                     {
                         type: "function",
                         fn: (x: number) => a * x * x,
-                        color: "#62D0AD",
+                        color: COLOR_CURVE,
                         weight: 3,
                         domain: [-5, 5] as [number, number],
                     },
-                    // Point at x=1 to show the value of 'a'
+                    // Vertex point at origin
                     {
                         type: "point",
-                        x: 1,
-                        y: a,
-                        color: "#62D0AD",
+                        x: 0,
+                        y: 0,
+                        color: COLOR_A,
                     },
-                    // Label indicator segment
+                    // Vertical indicator lines showing 'a' effect
                     {
                         type: "segment",
-                        point1: [1, 0],
-                        point2: [1, a],
-                        color: "#62D0AD",
+                        point1: [pointX, 0],
+                        point2: [pointX, pointY],
+                        color: COLOR_A,
+                        weight: 2,
+                        style: "dashed",
+                    },
+                    {
+                        type: "segment",
+                        point1: [-pointX, 0],
+                        point2: [-pointX, pointY],
+                        color: COLOR_A,
                         weight: 2,
                         style: "dashed",
                     },
@@ -91,8 +123,8 @@ function CoefficientAViz() {
                 steps={[
                     {
                         gesture: "drag-vertical",
-                        label: "Drag to change the steepness",
-                        position: { x: "50%", y: "50%" },
+                        label: "Drag the teal points up or down to change steepness",
+                        position: { x: "70%", y: "35%" },
                     },
                 ]}
             />
@@ -141,10 +173,10 @@ export const coefficientABlocks: ReactElement[] = [
         <div className="space-y-4">
             <Block id="coeff-a-explore-text" padding="sm">
                 <EditableParagraph id="para-coeff-a-explore-text" blockId="coeff-a-explore-text">
-                    The teal curve shows{" "}
+                    The indigo curve shows{" "}
                     <InlineFormula
-                        latex="y = \clr{a}{a}x^2"
-                        colorMap={{ a: "#62D0AD" }}
+                        latex="\clr{fx}{y} = \clr{a}{a}x^2"
+                        colorMap={{ fx: "#6366f1", a: "#62D0AD" }}
                     />{" "}
                     where{" "}
                     <InlineSpotColor varName="exploreA" color="#62D0AD">a</InlineSpotColor> ={" "}
@@ -160,7 +192,7 @@ export const coefficientABlocks: ReactElement[] = [
                 <EditableParagraph id="para-coeff-a-width-explanation" blockId="coeff-a-width-explanation">
                     The size of{" "}
                     <InlineSpotColor varName="exploreA" color="#62D0AD">a</InlineSpotColor>{" "}
-                    controls the width. When |a| {">"} 1, the parabola is narrower than the reference. When |a| {"<"} 1, it's wider. Drag the teal point at the vertex or scrub the value to see this in action.
+                    controls the width. When |a| {">"} 1, the parabola is narrower than the reference. When |a| {"<"} 1, it's wider. Drag the teal points on the curve up or down to see how the parabola stretches and compresses.
                 </EditableParagraph>
             </Block>
         </div>

@@ -19,10 +19,15 @@ import {
 } from "../variables";
 import { useVar, useSetVar } from "@/stores";
 
-// Reactive visualization for coefficient b
+// Reactive visualization for coefficient b with color-matched elements
 function CoefficientBViz() {
     const b = useVar("exploreB", 0) as number;
     const setVar = useSetVar();
+
+    // Color constants
+    const COLOR_B = "#8E90F5"; // Indigo for 'b' coefficient
+    const COLOR_C = "#F7B23B"; // Amber for 'c' (y-intercept)
+    const COLOR_CURVE = "#6366f1"; // Soft indigo for f(x) curve
 
     // For y = x² + bx, vertex is at x = -b/2
     const vertexX = -b / 2;
@@ -34,9 +39,10 @@ function CoefficientBViz() {
                 height={350}
                 viewBox={{ x: [-6, 6], y: [-5, 5] }}
                 movablePoints={[
+                    // Vertex point (indigo 'B' point) - controls b coefficient
                     {
                         initial: [vertexX, vertexY],
-                        color: "#8E90F5",
+                        color: COLOR_B,
                         position: [vertexX, vertexY],
                         constrain: (point) => {
                             // Constrain to the path where vertex moves as b changes
@@ -67,27 +73,36 @@ function CoefficientBViz() {
                         weight: 2,
                         domain: [-6, 6] as [number, number],
                     },
-                    // Active parabola y = x² + bx
+                    // Active parabola y = x² + bx (indigo curve)
                     {
                         type: "function",
                         fn: (x: number) => x * x + b * x,
-                        color: "#8E90F5",
+                        color: COLOR_CURVE,
                         weight: 3,
                         domain: [-6, 6] as [number, number],
                     },
-                    // Y-intercept point (always at origin for this simplified case)
+                    // Y-intercept point (amber 'C' point - always at origin)
                     {
                         type: "point",
                         x: 0,
                         y: 0,
-                        color: "#F7B23B",
+                        color: COLOR_C,
                     },
-                    // Axis of symmetry
+                    // Axis of symmetry (indigo dashed line)
                     {
                         type: "segment",
                         point1: [vertexX, -5],
                         point2: [vertexX, 5],
-                        color: "#8E90F5",
+                        color: COLOR_B,
+                        weight: 1,
+                        style: "dashed",
+                    },
+                    // Connection from vertex to y-intercept
+                    {
+                        type: "segment",
+                        point1: [vertexX, vertexY],
+                        point2: [0, 0],
+                        color: "#94a3b8",
                         weight: 1,
                         style: "dashed",
                     },
@@ -98,8 +113,8 @@ function CoefficientBViz() {
                 steps={[
                     {
                         gesture: "drag-horizontal",
-                        label: "Drag the vertex left and right",
-                        position: { x: "50%", y: "50%" },
+                        label: "Drag the indigo B vertex left and right",
+                        position: { x: "50%", y: "55%" },
                     },
                 ]}
             />
@@ -163,8 +178,8 @@ export const coefficientBBlocks: ReactElement[] = [
                 <EditableParagraph id="para-coeff-b-explore-text" blockId="coeff-b-explore-text">
                     The indigo curve shows{" "}
                     <InlineFormula
-                        latex="y = x^2 + \clr{b}{b}x"
-                        colorMap={{ b: "#8E90F5" }}
+                        latex="\clr{fx}{y} = x^2 + \clr{b}{b}x"
+                        colorMap={{ fx: "#6366f1", b: "#8E90F5" }}
                     />{" "}
                     where{" "}
                     <InlineSpotColor varName="exploreB" color="#8E90F5">b</InlineSpotColor> ={" "}

@@ -19,10 +19,14 @@ import {
 } from "../variables";
 import { useVar, useSetVar } from "@/stores";
 
-// Reactive visualization for coefficient c
+// Reactive visualization for coefficient c with color-matched elements
 function CoefficientCViz() {
     const c = useVar("exploreC", 0) as number;
     const setVar = useSetVar();
+
+    // Color constants
+    const COLOR_C = "#F7B23B"; // Amber for 'c' coefficient
+    const COLOR_CURVE = "#6366f1"; // Soft indigo for f(x) curve
 
     return (
         <div className="relative">
@@ -30,9 +34,10 @@ function CoefficientCViz() {
                 height={350}
                 viewBox={{ x: [-5, 5], y: [-6, 6] }}
                 movablePoints={[
+                    // Y-intercept point (amber 'C' point)
                     {
                         initial: [0, c],
-                        color: "#F7B23B",
+                        color: COLOR_C,
                         position: [0, c],
                         constrain: "vertical",
                         onChange: (point) => {
@@ -52,21 +57,30 @@ function CoefficientCViz() {
                         weight: 2,
                         domain: [-5, 5] as [number, number],
                     },
-                    // Active parabola y = x² + c
+                    // Active parabola y = x² + c (indigo curve)
                     {
                         type: "function",
                         fn: (x: number) => x * x + c,
-                        color: "#F7B23B",
+                        color: COLOR_CURVE,
                         weight: 3,
                         domain: [-5, 5] as [number, number],
                     },
-                    // Y-axis intercept highlight
+                    // Y-axis intercept highlight bar
                     {
                         type: "segment",
-                        point1: [-0.3, c],
-                        point2: [0.3, c],
-                        color: "#F7B23B",
-                        weight: 4,
+                        point1: [-0.4, c],
+                        point2: [0.4, c],
+                        color: COLOR_C,
+                        weight: 5,
+                    },
+                    // Vertical indicator from origin to c
+                    {
+                        type: "segment",
+                        point1: [0, 0],
+                        point2: [0, c],
+                        color: COLOR_C,
+                        weight: 2,
+                        style: "dashed",
                     },
                 ]}
             />
@@ -75,8 +89,8 @@ function CoefficientCViz() {
                 steps={[
                     {
                         gesture: "drag-vertical",
-                        label: "Drag the point up or down",
-                        position: { x: "50%", y: "50%" },
+                        label: "Drag the amber C point up or down",
+                        position: { x: "50%", y: "40%" },
                     },
                 ]}
             />
@@ -130,10 +144,10 @@ export const coefficientCBlocks: ReactElement[] = [
         <div className="space-y-4">
             <Block id="coeff-c-explore-text" padding="sm">
                 <EditableParagraph id="para-coeff-c-explore-text" blockId="coeff-c-explore-text">
-                    The amber curve shows{" "}
+                    The indigo curve shows{" "}
                     <InlineFormula
-                        latex="y = x^2 + \clr{c}{c}"
-                        colorMap={{ c: "#F7B23B" }}
+                        latex="\clr{fx}{y} = x^2 + \clr{c}{c}"
+                        colorMap={{ fx: "#6366f1", c: "#F7B23B" }}
                     />{" "}
                     where{" "}
                     <InlineSpotColor varName="exploreC" color="#F7B23B">c</InlineSpotColor> ={" "}

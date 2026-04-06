@@ -20,7 +20,7 @@ import {
 } from "../variables";
 import { useVar, useSetVar } from "@/stores";
 
-// Reactive visualization showing a basic parabola
+// Reactive visualization showing a basic parabola with color-coded points
 function IntroParabolaViz() {
     const a = useVar("coefficientA", 1) as number;
     const b = useVar("coefficientB", 0) as number;
@@ -31,40 +31,68 @@ function IntroParabolaViz() {
     const vertexX = a !== 0 ? -b / (2 * a) : 0;
     const vertexY = a * vertexX * vertexX + b * vertexX + c;
 
+    // Color constants matching the formula
+    const COLOR_A = "#62D0AD"; // Teal for 'a'
+    const COLOR_B = "#8E90F5"; // Indigo for 'b'
+    const COLOR_C = "#F7B23B"; // Amber for 'c'
+    const COLOR_CURVE = "#6366f1"; // Soft indigo for f(x) curve
+
     return (
         <div className="relative">
             <Cartesian2D
                 height={350}
                 viewBox={{ x: [-6, 6], y: [-6, 6] }}
                 movablePoints={[
+                    // Vertex point (teal - represents 'a' effect)
                     {
                         initial: [vertexX, vertexY],
-                        color: "#62D0AD",
+                        color: COLOR_A,
                         position: [vertexX, vertexY],
                         constrain: "vertical",
                         onChange: (point) => {
-                            // When vertex is dragged vertically, update 'a' coefficient
                             const newY = point[1];
-                            // Keep vertex at x=0 for simplicity in intro
-                            // y = ax² at x=1 means y = a, so changing vertex height changes 'a'
                             const newA = (newY - c) / (vertexX === 0 ? 1 : vertexX * vertexX);
                             if (Math.abs(newA) <= 3 && Math.abs(newA) >= 0.1) {
                                 setVar("coefficientA", Math.round(newA * 2) / 2);
                             }
                         },
                     },
+                    // Y-intercept point (amber - represents 'c')
+                    {
+                        initial: [0, c],
+                        color: COLOR_C,
+                        position: [0, c],
+                        constrain: "vertical",
+                        onChange: (point) => {
+                            const newC = Math.round(point[1]);
+                            if (newC >= -5 && newC <= 5) {
+                                setVar("coefficientC", newC);
+                            }
+                        },
+                    },
                 ]}
                 plots={[
+                    // Main parabola curve
                     {
                         type: "function",
                         fn: (x: number) => a * x * x + b * x + c,
-                        color: "#62D0AD",
+                        color: COLOR_CURVE,
                         weight: 3,
                     },
+                    // Axis of symmetry (dashed)
                     {
                         type: "segment",
                         point1: [vertexX, -6],
                         point2: [vertexX, 6],
+                        color: "#94a3b8",
+                        weight: 1,
+                        style: "dashed",
+                    },
+                    // Visual indicator connecting vertex to y-intercept
+                    {
+                        type: "segment",
+                        point1: [vertexX, vertexY],
+                        point2: [0, c],
                         color: "#94a3b8",
                         weight: 1,
                         style: "dashed",
@@ -76,8 +104,8 @@ function IntroParabolaViz() {
                 steps={[
                     {
                         gesture: "drag-vertical",
-                        label: "Drag the vertex up or down",
-                        position: { x: "50%", y: "50%" },
+                        label: "Drag the teal vertex or amber y-intercept point",
+                        position: { x: "50%", y: "45%" },
                     },
                 ]}
             />
@@ -122,8 +150,8 @@ export const introductionBlocks: ReactElement[] = [
             <EditableParagraph id="para-intro-formula-explanation" blockId="intro-formula-explanation">
                 A quadratic function is written in standard form as{" "}
                 <InlineFormula
-                    latex="f(x) = \clr{a}{a}x^2 + \clr{b}{b}x + \clr{c}{c}"
-                    colorMap={{ a: "#62D0AD", b: "#8E90F5", c: "#F7B23B" }}
+                    latex="\clr{fx}{f(x)} = \clr{a}{a}x^2 + \clr{b}{b}x + \clr{c}{c}"
+                    colorMap={{ fx: "#6366f1", a: "#62D0AD", b: "#8E90F5", c: "#F7B23B" }}
                 />
                 . The three coefficients{" "}
                 <InlineSpotColor varName="coefficientA" color="#62D0AD">a</InlineSpotColor>,{" "}
@@ -134,12 +162,13 @@ export const introductionBlocks: ReactElement[] = [
         </Block>
     </StackLayout>,
 
-    // Interactive formula
+    // Interactive formula with matching curve color
     <StackLayout key="layout-intro-interactive-formula" maxWidth="xl">
         <Block id="intro-interactive-formula" padding="md">
             <FormulaBlock
-                latex="f(x) = \scrub{coefficientA}x^2 + \scrub{coefficientB}x + \scrub{coefficientC}"
+                latex="\clr{fx}{f(x)} = \scrub{coefficientA}x^2 + \scrub{coefficientB}x + \scrub{coefficientC}"
                 variables={scrubVarsFromDefinitions(["coefficientA", "coefficientB", "coefficientC"])}
+                colorMap={{ fx: "#6366f1" }}
             />
         </Block>
     </StackLayout>,
