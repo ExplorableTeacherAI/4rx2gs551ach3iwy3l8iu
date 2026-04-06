@@ -1,4 +1,4 @@
-import { type ReactElement } from "react";
+import { type ReactElement, useState, useRef, useEffect } from "react";
 import { Block } from "@/components/templates";
 import { StackLayout, SplitLayout } from "@/components/layouts";
 import {
@@ -26,6 +26,20 @@ function CoefficientAViz() {
     const a = useVar("exploreA", 1) as number;
     const setVar = useSetVar();
 
+    // Track if we're currently dragging to avoid key changes during drag
+    const isDraggingRef = useRef(false);
+    const [vizKey, setVizKey] = useState(0);
+    const lastExternalA = useRef(a);
+
+    // Detect external changes (triggers, scrubbles) vs drag changes
+    useEffect(() => {
+        // If not dragging and value changed significantly, force re-render
+        if (!isDraggingRef.current && Math.abs(a - lastExternalA.current) > 0.05) {
+            setVizKey(k => k + 1);
+        }
+        lastExternalA.current = a;
+    }, [a]);
+
     // Color constants
     const COLOR_A = "#62D0AD"; // Teal for 'a' coefficient
     const COLOR_CURVE = "#6366f1"; // Soft indigo for f(x) curve
@@ -33,10 +47,6 @@ function CoefficientAViz() {
     // Points on the curve at x = ±2 (symmetrical)
     const pointX = 2;
     const curveY = a * pointX * pointX;
-
-    // Use a key based on 'a' to force re-render when value changes externally (e.g., from triggers)
-    // Round to avoid key changes during smooth dragging
-    const vizKey = `coeff-a-viz-${Math.round(a * 10)}`;
 
     return (
         <div className="relative">
@@ -56,13 +66,17 @@ function CoefficientAViz() {
                             return [pointX, newY];
                         },
                         onChange: (point) => {
+                            isDraggingRef.current = true;
                             // y = a * x² at x = 2, so a = y / 4
                             const newA = point[1] / (pointX * pointX);
                             // Round to nearest 0.1 to match step
                             const roundedA = Math.round(newA * 10) / 10;
                             if (roundedA >= -3 && roundedA <= 3 && roundedA !== 0) {
                                 setVar("exploreA", roundedA);
+                                lastExternalA.current = roundedA;
                             }
+                            // Reset dragging flag after a short delay
+                            setTimeout(() => { isDraggingRef.current = false; }, 100);
                         },
                     },
                     // Left point on curve (x = -2) - mirrors the right point
@@ -75,12 +89,15 @@ function CoefficientAViz() {
                             return [-pointX, newY];
                         },
                         onChange: (point) => {
+                            isDraggingRef.current = true;
                             // y = a * x² at x = -2, so a = y / 4
                             const newA = point[1] / (pointX * pointX);
                             const roundedA = Math.round(newA * 10) / 10;
                             if (roundedA >= -3 && roundedA <= 3 && roundedA !== 0) {
                                 setVar("exploreA", roundedA);
+                                lastExternalA.current = roundedA;
                             }
+                            setTimeout(() => { isDraggingRef.current = false; }, 100);
                         },
                     },
                 ]}
