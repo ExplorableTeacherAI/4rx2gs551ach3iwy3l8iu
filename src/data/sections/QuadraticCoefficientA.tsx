@@ -213,7 +213,7 @@ export const coefficientABlocks: ReactElement[] = [
                     correctValue="upward"
                     position="terminal"
                     successMessage="— exactly! A positive 'a' means the parabola smiles upward"
-                    failureMessage="— not quite."
+                    failureMessage="— not quite. Let's explore this in the graph!"
                     hint="Think about which way a smile curves"
                     visualizationHint={{
                         blockId: "coeff-a-viz",
@@ -221,14 +221,22 @@ export const coefficientABlocks: ReactElement[] = [
                         steps: [
                             {
                                 gesture: "drag-vertical",
-                                label: "Drag the vertex point upward and watch the curve direction",
-                                position: { x: "50%", y: "40%" },
+                                label: "First, drag the teal point UP to make a = 2. Watch which way the curve opens!",
+                                position: { x: "70%", y: "30%" },
                                 completionVar: "exploreA",
                                 completionValue: 2,
-                                completionTolerance: 1,
+                                completionTolerance: 0.5,
+                            },
+                            {
+                                gesture: "drag-vertical",
+                                label: "Now drag it DOWN to make a = -2. See how the curve flips!",
+                                position: { x: "70%", y: "70%" },
+                                completionVar: "exploreA",
+                                completionValue: -2,
+                                completionTolerance: 0.5,
                             },
                         ],
-                        label: "See it in the graph",
+                        label: "Discover it yourself",
                         resetVars: { exploreA: 1 },
                     }}
                 >
