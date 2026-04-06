@@ -218,9 +218,15 @@ export const introductionBlocks: ReactElement[] = [
     <StackLayout key="layout-intro-interactive-formula" maxWidth="xl">
         <Block id="intro-interactive-formula" padding="md">
             <FormulaBlock
-                latex="\highlight{introFormulaHighlight}{fx}{f(x)} = \scrub{coefficientA}x^2 + \scrub{coefficientB}x + \scrub{coefficientC}"
+                latex="\highlight{fx}{f(x)} = \scrub{coefficientA}x^2 + \scrub{coefficientB}x + \scrub{coefficientC}"
                 variables={scrubVarsFromDefinitions(["coefficientA", "coefficientB", "coefficientC"])}
-                colorMap={{ fx: "#6366f1" }}
+                linkedHighlights={{
+                    fx: {
+                        varName: "introFormulaHighlight",
+                        color: "#6366f1",
+                        bgColor: "rgba(99, 102, 241, 0.2)",
+                    },
+                }}
             />
         </Block>
     </StackLayout>,
