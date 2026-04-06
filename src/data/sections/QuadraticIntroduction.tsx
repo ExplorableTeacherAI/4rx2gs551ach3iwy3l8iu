@@ -100,7 +100,7 @@ export const introductionBlocks: ReactElement[] = [
         <Block id="intro-hook" padding="sm">
             <EditableParagraph id="para-intro-hook" blockId="intro-hook">
                 Every time you throw a ball, water shoots from a fountain, or a rocket arcs through the sky, you're seeing a{" "}
-                <InlineTooltip id="tooltip-intro-parabola" content="A U-shaped curve formed by the graph of a quadratic function">
+                <InlineTooltip id="tooltip-intro-parabola" definition="A U-shaped curve formed by the graph of a quadratic function">
                     parabola
                 </InlineTooltip>
                 . This distinctive U-shaped curve appears everywhere in nature and engineering. But what controls whether the parabola opens wide or narrow? What makes it point up or down?
