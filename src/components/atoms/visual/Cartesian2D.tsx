@@ -627,8 +627,10 @@ export function Cartesian2D({
                 {showGrid && (
                     <Coordinates.Cartesian
                         subdivisions={subdivisions}
-                        xAxis={{ lines: gridSpacing }}
-                        yAxis={{ lines: gridSpacing }}
+                        {...(gridSpacing !== undefined && {
+                            xAxis: { lines: gridSpacing },
+                            yAxis: { lines: gridSpacing },
+                        })}
                     />
                 )}
 
