@@ -53,7 +53,7 @@ function CoefficientAViz() {
             <Cartesian2D
                 key={vizKey}
                 height={350}
-                viewBox={{ x: [-5, 5], y: [-5, 5] }}
+                viewBox={{ x: [-5, 5], y: [-12, 12] }}
                 movablePoints={[
                     // Right point on curve (x = 2) - drag vertically to change 'a'
                     {
@@ -62,7 +62,7 @@ function CoefficientAViz() {
                         position: [pointX, a * pointX * pointX],
                         constrain: (point) => {
                             // Constrain to vertical line at x = 2, limit y range
-                            const newY = Math.max(-4.8, Math.min(4.8, point[1]));
+                            const newY = Math.max(-11, Math.min(11, point[1]));
                             return [pointX, newY];
                         },
                         onChange: (point) => {
@@ -85,7 +85,7 @@ function CoefficientAViz() {
                         color: COLOR_A,
                         position: [-pointX, a * pointX * pointX],
                         constrain: (point) => {
-                            const newY = Math.max(-4.8, Math.min(4.8, point[1]));
+                            const newY = Math.max(-11, Math.min(11, point[1]));
                             return [-pointX, newY];
                         },
                         onChange: (point) => {
