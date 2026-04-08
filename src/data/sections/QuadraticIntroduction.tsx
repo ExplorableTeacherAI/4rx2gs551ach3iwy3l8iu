@@ -205,13 +205,11 @@ export const introductionBlocks: ReactElement[] = [
                     latex="\clr{fx}{f(x)} = \clr{a}{a}x^2 + \clr{b}{b}x + \clr{c}{c}"
                     colorMap={{ fx: "#6366f1", a: "#62D0AD", b: "#8E90F5", c: "#F7B23B" }}
                 />
-                . Each coefficient has a specific job:{" "}
-                <InlineSpotColor varName="coefficientA" color="#62D0AD">a</InlineSpotColor>{" "}
-                controls whether the parabola opens up or down and how steep it is,{" "}
-                <InlineSpotColor varName="coefficientB" color="#8E90F5">b</InlineSpotColor>{" "}
-                shifts the vertex left or right, and{" "}
+                . The three coefficients{" "}
+                <InlineSpotColor varName="coefficientA" color="#62D0AD">a</InlineSpotColor>,{" "}
+                <InlineSpotColor varName="coefficientB" color="#8E90F5">b</InlineSpotColor>, and{" "}
                 <InlineSpotColor varName="coefficientC" color="#F7B23B">c</InlineSpotColor>{" "}
-                determines where the parabola crosses the y-axis.
+                each control a different aspect of the parabola's shape and position.
             </EditableParagraph>
         </Block>
     </StackLayout>,
