@@ -278,6 +278,212 @@ export const puttingTogetherBlocks: ReactElement[] = [
         </Block>
     </StackLayout>,
 
+    // More Practice heading
+    <StackLayout key="layout-practice-heading" maxWidth="xl">
+        <Block id="practice-heading" padding="md">
+            <EditableH2 id="h2-practice-heading" blockId="practice-heading">
+                More Practice
+            </EditableH2>
+        </Block>
+    </StackLayout>,
+
+    // Practice intro
+    <StackLayout key="layout-practice-intro" maxWidth="xl">
+        <Block id="practice-intro" padding="sm">
+            <EditableParagraph id="para-practice-intro" blockId="practice-intro">
+                Ready to test your skills? Here are more equations to analyse. For each one, identify the key features before looking at the graph.
+            </EditableParagraph>
+        </Block>
+    </StackLayout>,
+
+    // Example 2: f(x) = 3x² - 6x + 1
+    <StackLayout key="layout-example2-equation" maxWidth="xl">
+        <Block id="example2-equation" padding="sm">
+            <EditableParagraph id="para-example2-equation" blockId="example2-equation">
+                <strong>Example 2:</strong> Consider{" "}
+                <InlineFormula
+                    latex="f(x) = 3x^2 - 6x + 1"
+                    colorMap={{}}
+                />. Here a = 3, b = −6, and c = 1.
+            </EditableParagraph>
+        </Block>
+    </StackLayout>,
+
+    <StackLayout key="layout-example2-direction" maxWidth="xl">
+        <Block id="example2-direction" padding="sm">
+            <EditableParagraph id="para-example2-direction" blockId="example2-direction">
+                Since a = 3 is positive, the parabola opens{" "}
+                <InlineFeedback
+                    varName="answerExample2Direction"
+                    correctValue="upward"
+                    position="terminal"
+                    successMessage="— yes! Positive a always means upward"
+                    failureMessage="— think about the sign of a"
+                    hint="Positive a = smile, negative a = frown"
+                >
+                    <InlineClozeChoice
+                        varName="answerExample2Direction"
+                        correctAnswer="upward"
+                        options={["upward", "downward"]}
+                        {...choicePropsFromDefinition(getVariableInfo("answerExample2Direction"))}
+                    />
+                </InlineFeedback>.
+            </EditableParagraph>
+        </Block>
+    </StackLayout>,
+
+    <StackLayout key="layout-example2-yintercept" maxWidth="xl">
+        <Block id="example2-yintercept" padding="sm">
+            <EditableParagraph id="para-example2-yintercept" blockId="example2-yintercept">
+                The y-intercept is at y ={" "}
+                <InlineFeedback
+                    varName="answerExample2YIntercept"
+                    correctValue="1"
+                    position="mid-sentence"
+                    successMessage="✓"
+                    failureMessage="— check the value of c"
+                    hint="The y-intercept equals c"
+                >
+                    <InlineClozeInput
+                        varName="answerExample2YIntercept"
+                        correctAnswer="1"
+                        {...clozePropsFromDefinition(getVariableInfo("answerExample2YIntercept"))}
+                    />
+                </InlineFeedback>, and the vertex x-coordinate is x ={" "}
+                <InlineFeedback
+                    varName="answerExample2VertexX"
+                    correctValue="1"
+                    position="terminal"
+                    successMessage="— correct! Using x = −b/(2a) = −(−6)/(2×3) = 6/6 = 1"
+                    failureMessage="— use the formula x = −b/(2a)"
+                    hint="x = −(−6) / (2 × 3)"
+                >
+                    <InlineClozeInput
+                        varName="answerExample2VertexX"
+                        correctAnswer="1"
+                        {...clozePropsFromDefinition(getVariableInfo("answerExample2VertexX"))}
+                    />
+                </InlineFeedback>.
+            </EditableParagraph>
+        </Block>
+    </StackLayout>,
+
+    // Example 3: f(x) = 0.5x² + 3
+    <StackLayout key="layout-example3-equation" maxWidth="xl">
+        <Block id="example3-equation" padding="sm">
+            <EditableParagraph id="para-example3-equation" blockId="example3-equation">
+                <strong>Example 3:</strong> Consider{" "}
+                <InlineFormula
+                    latex="f(x) = 0.5x^2 + 3"
+                    colorMap={{}}
+                />. Here a = 0.5, b = 0, and c = 3.
+            </EditableParagraph>
+        </Block>
+    </StackLayout>,
+
+    <StackLayout key="layout-example3-width" maxWidth="xl">
+        <Block id="example3-width" padding="sm">
+            <EditableParagraph id="para-example3-width" blockId="example3-width">
+                Compared to the standard parabola y = x², this curve is{" "}
+                <InlineFeedback
+                    varName="answerExample3Width"
+                    correctValue="wider"
+                    position="terminal"
+                    successMessage="— exactly! When |a| < 1, the parabola is wider and flatter"
+                    failureMessage="— remember what happens when |a| is less than 1"
+                    hint="Smaller |a| means a wider, flatter curve"
+                >
+                    <InlineClozeChoice
+                        varName="answerExample3Width"
+                        correctAnswer="wider"
+                        options={["wider", "narrower", "same width"]}
+                        {...choicePropsFromDefinition(getVariableInfo("answerExample3Width"))}
+                    />
+                </InlineFeedback>.
+            </EditableParagraph>
+        </Block>
+    </StackLayout>,
+
+    <StackLayout key="layout-example3-yintercept" maxWidth="xl">
+        <Block id="example3-yintercept" padding="sm">
+            <EditableParagraph id="para-example3-yintercept" blockId="example3-yintercept">
+                The y-intercept is at y ={" "}
+                <InlineFeedback
+                    varName="answerExample3YIntercept"
+                    correctValue="3"
+                    position="terminal"
+                    successMessage="— correct! The vertex is at (0, 3) since b = 0"
+                    failureMessage="— the y-intercept equals c"
+                    hint="Look at the constant term"
+                >
+                    <InlineClozeInput
+                        varName="answerExample3YIntercept"
+                        correctAnswer="3"
+                        {...clozePropsFromDefinition(getVariableInfo("answerExample3YIntercept"))}
+                    />
+                </InlineFeedback>.
+            </EditableParagraph>
+        </Block>
+    </StackLayout>,
+
+    // Example 4: f(x) = -2x² + 8x - 5
+    <StackLayout key="layout-example4-equation" maxWidth="xl">
+        <Block id="example4-equation" padding="sm">
+            <EditableParagraph id="para-example4-equation" blockId="example4-equation">
+                <strong>Example 4:</strong> Consider{" "}
+                <InlineFormula
+                    latex="f(x) = -2x^2 + 8x - 5"
+                    colorMap={{}}
+                />. Here a = −2, b = 8, and c = −5.
+            </EditableParagraph>
+        </Block>
+    </StackLayout>,
+
+    <StackLayout key="layout-example4-direction" maxWidth="xl">
+        <Block id="example4-direction" padding="sm">
+            <EditableParagraph id="para-example4-direction" blockId="example4-direction">
+                Since a = −2 is negative, the parabola opens{" "}
+                <InlineFeedback
+                    varName="answerExample4Direction"
+                    correctValue="downward"
+                    position="terminal"
+                    successMessage="— right! Negative a means the parabola frowns downward"
+                    failureMessage="— think about what negative a means"
+                    hint="Negative a flips the parabola upside down"
+                >
+                    <InlineClozeChoice
+                        varName="answerExample4Direction"
+                        correctAnswer="downward"
+                        options={["upward", "downward"]}
+                        {...choicePropsFromDefinition(getVariableInfo("answerExample4Direction"))}
+                    />
+                </InlineFeedback>.
+            </EditableParagraph>
+        </Block>
+    </StackLayout>,
+
+    <StackLayout key="layout-example4-vertex" maxWidth="xl">
+        <Block id="example4-vertex" padding="sm">
+            <EditableParagraph id="para-example4-vertex" blockId="example4-vertex">
+                The vertex x-coordinate is x ={" "}
+                <InlineFeedback
+                    varName="answerExample4VertexX"
+                    correctValue="2"
+                    position="terminal"
+                    successMessage="— perfect! x = −8/(2×−2) = −8/−4 = 2"
+                    failureMessage="— use the vertex formula x = −b/(2a)"
+                    hint="x = −8 / (2 × −2)"
+                >
+                    <InlineClozeInput
+                        varName="answerExample4VertexX"
+                        correctAnswer="2"
+                        {...clozePropsFromDefinition(getVariableInfo("answerExample4VertexX"))}
+                    />
+                </InlineFeedback>.
+            </EditableParagraph>
+        </Block>
+    </StackLayout>,
+
     // Conclusion
     <StackLayout key="layout-conclusion" maxWidth="xl">
         <Block id="conclusion" padding="md">

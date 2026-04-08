@@ -226,6 +226,82 @@ export const variableDefinitions: Record<string, VariableDefinition> = {
         color: '#6366f1',
         bgColor: 'rgba(99, 102, 241, 0.15)',
     },
+
+    // ─────────────────────────────────────────
+    // ADDITIONAL PRACTICE EXAMPLES
+    // ─────────────────────────────────────────
+    answerExample2Direction: {
+        defaultValue: '',
+        type: 'select',
+        label: 'Example 2 Direction',
+        description: 'Direction for f(x) = 3x² - 6x + 1',
+        placeholder: '???',
+        correctAnswer: 'upward',
+        options: ['upward', 'downward'],
+        color: '#62D0AD',
+    },
+
+    answerExample2YIntercept: {
+        defaultValue: '',
+        type: 'text',
+        label: 'Example 2 Y-Intercept',
+        description: 'Y-intercept for f(x) = 3x² - 6x + 1',
+        placeholder: '?',
+        correctAnswer: '1',
+        color: '#F7B23B',
+    },
+
+    answerExample2VertexX: {
+        defaultValue: '',
+        type: 'text',
+        label: 'Example 2 Vertex X',
+        description: 'Vertex x-coordinate for f(x) = 3x² - 6x + 1',
+        placeholder: '?',
+        correctAnswer: '1',
+        color: '#8E90F5',
+    },
+
+    answerExample3Width: {
+        defaultValue: '',
+        type: 'select',
+        label: 'Example 3 Width',
+        description: 'Width comparison for f(x) = 0.5x²',
+        placeholder: '???',
+        correctAnswer: 'wider',
+        options: ['wider', 'narrower', 'same width'],
+        color: '#62D0AD',
+    },
+
+    answerExample3YIntercept: {
+        defaultValue: '',
+        type: 'text',
+        label: 'Example 3 Y-Intercept',
+        description: 'Y-intercept for f(x) = 0.5x² + 3',
+        placeholder: '?',
+        correctAnswer: '3',
+        color: '#F7B23B',
+    },
+
+    answerExample4Direction: {
+        defaultValue: '',
+        type: 'select',
+        label: 'Example 4 Direction',
+        description: 'Direction for f(x) = -2x² + 8x - 5',
+        placeholder: '???',
+        correctAnswer: 'downward',
+        options: ['upward', 'downward'],
+        color: '#62D0AD',
+    },
+
+    answerExample4VertexX: {
+        defaultValue: '',
+        type: 'text',
+        label: 'Example 4 Vertex X',
+        description: 'Vertex x-coordinate for f(x) = -2x² + 8x - 5',
+        placeholder: '?',
+        correctAnswer: '2',
+        color: '#8E90F5',
+    },
 };
 
 /**
