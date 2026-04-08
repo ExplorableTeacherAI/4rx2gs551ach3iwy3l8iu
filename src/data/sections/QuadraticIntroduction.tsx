@@ -157,7 +157,7 @@ function IntroParabolaViz() {
                     {
                         gesture: "drag-horizontal",
                         label: "Drag the teal points on the curve to change steepness",
-                        position: { x: "75%", y: "25%" },
+                        position: { x: "50%", y: "95%" },
                     },
                 ]}
             />
