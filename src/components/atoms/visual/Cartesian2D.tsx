@@ -161,6 +161,11 @@ export interface Cartesian2DProps {
      * Pass `false` to show only major gridlines (default 1).
      */
     subdivisions?: number | false;
+    /**
+     * Spacing between major grid lines (default 1).
+     * For example, gridSpacing={2} will show lines at 0, 2, 4, -2, -4, etc.
+     */
+    gridSpacing?: number;
     /** Extra Tailwind / CSS class for the wrapper div */
     className?: string;
     /**
@@ -445,6 +450,7 @@ export function Cartesian2D({
     dynamicPlots,
     showGrid = true,
     subdivisions = 1,
+    gridSpacing,
     className = "",
     highlightVarName,
 }: Cartesian2DProps) {
@@ -619,7 +625,11 @@ export function Cartesian2D({
                 viewBox={{ x: viewBox.x, y: viewBox.y }}
             >
                 {showGrid && (
-                    <Coordinates.Cartesian subdivisions={subdivisions} />
+                    <Coordinates.Cartesian
+                        subdivisions={subdivisions}
+                        xAxis={{ lines: gridSpacing }}
+                        yAxis={{ lines: gridSpacing }}
+                    />
                 )}
 
                 {/* Static + dynamic plot items */}
