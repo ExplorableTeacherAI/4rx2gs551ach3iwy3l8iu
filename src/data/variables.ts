@@ -83,11 +83,11 @@ export const variableDefinitions: Record<string, VariableDefinition> = {
     },
 
     coefficientC: {
-        defaultValue: 0,
+        defaultValue: -5,
         type: 'number',
         label: 'Coefficient c',
         description: 'Controls vertical shift (y-intercept)',
-        min: -5,
+        min: -6,
         max: 5,
         step: 0.1,
         color: '#F7B23B', // Warm amber
