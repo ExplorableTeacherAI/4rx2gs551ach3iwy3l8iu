@@ -53,7 +53,8 @@ function CoefficientAViz() {
             <Cartesian2D
                 key={vizKey}
                 height={350}
-                viewBox={{ x: [-5, 5], y: [-12, 12] }}
+                viewBox={{ x: [-4, 4], y: [-8, 12] }}
+                axisOptions={{ tickStep: 2 }}
                 movablePoints={[
                     // Right point on curve (x = 2) - drag vertically to change 'a'
                     {
