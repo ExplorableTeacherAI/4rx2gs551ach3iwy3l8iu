@@ -23,73 +23,131 @@ import {
 } from "../variables";
 import { useVar, useSetVar } from "@/stores";
 
-// Full interactive parabola visualization
+// Side-by-side comparison visualization with reference curve
 function FullParabolaViz() {
     const a = useVar("coefficientA", 1) as number;
     const b = useVar("coefficientB", 0) as number;
-    const c = useVar("coefficientC", 0) as number;
+    const c = useVar("coefficientC", -5) as number;
     const setVar = useSetVar();
 
-    // Calculate vertex
+    // Color constants
+    const COLOR_A = "#62D0AD"; // Teal for 'a' - controls steepness
+    const COLOR_B = "#8E90F5"; // Indigo for 'b' - controls horizontal shift
+    const COLOR_C = "#F7B23B"; // Amber for 'c' - controls vertical shift
+    const COLOR_REFERENCE = "#cbd5e1"; // Faded slate for reference curve
+
+    // Calculate vertex position
     const vertexX = a !== 0 ? -b / (2 * a) : 0;
     const vertexY = a * vertexX * vertexX + b * vertexX + c;
+
+    // Point positions for the three control handles
+    // A-handle: on the curve at x=2 to control steepness
+    const aHandleX = 2;
+    const aHandleY = a * aHandleX * aHandleX + b * aHandleX + c;
+
+    // B-handle: at the vertex to control horizontal position
+    const bHandleX = vertexX;
+    const bHandleY = vertexY;
+
+    // C-handle: on the y-axis to control vertical shift
+    const cHandleX = 0;
+    const cHandleY = c;
 
     return (
         <div className="relative">
             <Cartesian2D
-                height={380}
-                viewBox={{ x: [-6, 6], y: [-6, 6] }}
+                height={400}
+                viewBox={{ x: [-6, 6], y: [-8, 6] }}
                 movablePoints={[
+                    // A-handle: drag vertically to change steepness
                     {
-                        initial: [vertexX, vertexY],
-                        color: "#62D0AD",
-                        position: [vertexX, vertexY],
+                        initial: [aHandleX, aHandleY],
+                        color: COLOR_A,
+                        position: [aHandleX, aHandleY],
+                        constrain: (point) => {
+                            // Keep x fixed, only allow vertical movement
+                            return [aHandleX, point[1]];
+                        },
                         onChange: (point) => {
-                            // Update c based on vertical movement, keeping vertex x fixed
-                            const newVertexY = point[1];
-                            // y_vertex = a*x_v² + b*x_v + c
-                            // c = y_vertex - a*x_v² - b*x_v
-                            const newC = newVertexY - a * vertexX * vertexX - b * vertexX;
-                            if (newC >= -5 && newC <= 5) {
-                                setVar("coefficientC", Math.round(newC * 2) / 2);
+                            // Calculate new 'a' from the point position
+                            // y = ax² + bx + c → a = (y - bx - c) / x²
+                            const newY = point[1];
+                            const newA = (newY - b * aHandleX - c) / (aHandleX * aHandleX);
+                            if (newA >= -3 && newA <= 3 && newA !== 0) {
+                                setVar("coefficientA", Math.round(newA * 10) / 10);
                             }
+                        },
+                    },
+                    // B-handle: drag horizontally to shift vertex
+                    {
+                        initial: [bHandleX, bHandleY],
+                        color: COLOR_B,
+                        position: [bHandleX, bHandleY],
+                        constrain: (point) => {
+                            // Keep on the parabola path as it shifts horizontally
+                            const newVertexX = Math.max(-4, Math.min(4, point[0]));
+                            // b = -2a * vertex_x
+                            const newB = -2 * a * newVertexX;
+                            const newVertexY = a * newVertexX * newVertexX + newB * newVertexX + c;
+                            return [newVertexX, newVertexY];
+                        },
+                        onChange: (point) => {
+                            const newVertexX = point[0];
+                            // b = -2a * vertex_x
+                            const newB = -2 * a * newVertexX;
+                            if (newB >= -4 && newB <= 4) {
+                                setVar("coefficientB", Math.round(newB * 10) / 10);
+                            }
+                        },
+                    },
+                    // C-handle: drag vertically on y-axis
+                    {
+                        initial: [cHandleX, cHandleY],
+                        color: COLOR_C,
+                        position: [cHandleX, cHandleY],
+                        constrain: "vertical",
+                        onChange: (point) => {
+                            const newC = Math.max(-6, Math.min(5, point[1]));
+                            setVar("coefficientC", Math.round(newC * 10) / 10);
                         },
                     },
                 ]}
                 plots={[
-                    // Main parabola
+                    // Reference curve: y = x² (faded)
+                    {
+                        type: "function",
+                        fn: (x: number) => x * x,
+                        color: COLOR_REFERENCE,
+                        weight: 2,
+                        style: "dashed",
+                        domain: [-6, 6] as [number, number],
+                    },
+                    // Main parabola: f(x) = ax² + bx + c
                     {
                         type: "function",
                         fn: (x: number) => a * x * x + b * x + c,
-                        color: "#62D0AD",
+                        color: "#6366f1",
                         weight: 3,
                         domain: [-6, 6] as [number, number],
                     },
-                    // Y-intercept point
-                    {
-                        type: "point",
-                        x: 0,
-                        y: c,
-                        color: "#F7B23B",
-                    },
-                    // Axis of symmetry
+                    // Axis of symmetry (dashed indigo line)
                     {
                         type: "segment",
-                        point1: [vertexX, -6],
+                        point1: [vertexX, -8],
                         point2: [vertexX, 6],
-                        color: "#8E90F5",
+                        color: COLOR_B,
                         weight: 1,
                         style: "dashed",
                     },
                 ]}
             />
             <InteractionHintSequence
-                hintKey="full-parabola-drag"
+                hintKey="comparison-parabola-drag"
                 steps={[
                     {
                         gesture: "drag",
-                        label: "Drag the vertex to move the parabola",
-                        position: { x: "50%", y: "50%" },
+                        label: "Drag the teal point to change steepness, indigo to shift sideways, amber to move up/down",
+                        position: { x: "50%", y: "95%" },
                     },
                 ]}
             />
