@@ -54,7 +54,7 @@ function CoefficientAViz() {
                 key={vizKey}
                 height={350}
                 viewBox={{ x: [-4, 4], y: [-8, 12] }}
-                axisOptions={{ tickStep: 2 }}
+                axisOptions={{ tickStep: 3 }}
                 movablePoints={[
                     // Right point on curve (x = 2) - drag vertically to change 'a'
                     {
