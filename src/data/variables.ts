@@ -61,7 +61,7 @@ export const variableDefinitions: Record<string, VariableDefinition> = {
     // COEFFICIENT VARIABLES
     // ─────────────────────────────────────────
     coefficientA: {
-        defaultValue: 1,
+        defaultValue: 2,
         type: 'number',
         label: 'Coefficient a',
         description: 'Controls parabola direction and width',
