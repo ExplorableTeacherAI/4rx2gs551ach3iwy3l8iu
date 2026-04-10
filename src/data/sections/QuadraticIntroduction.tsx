@@ -38,22 +38,43 @@ function IntroParabolaViz() {
 
     // Fixed y-level for the draggable points (they stay at this height)
     const fixedY = 2;
+
     // Calculate x positions on the curve at the fixed y level: y = ax² + bx + c
     // Solving ax² + bx + c = fixedY → ax² + bx + (c - fixedY) = 0
     // Using quadratic formula: x = (-b ± √(b² - 4a(c - fixedY))) / (2a)
     const disc = b * b - 4 * a * (c - fixedY);
-    let rightX = 2;
-    let leftX = -2;
-    if (disc >= 0 && a !== 0) {
+
+    // Function to compute x positions where curve intersects y = fixedY
+    const computeIntersections = (): { leftX: number; rightX: number; valid: boolean } => {
+        if (a === 0 || disc < 0) {
+            // No valid intersection, use fallback positions
+            return { leftX: -2, rightX: 2, valid: false };
+        }
+
         const sqrtDisc = Math.sqrt(disc);
         const x1 = (-b + sqrtDisc) / (2 * a);
         const x2 = (-b - sqrtDisc) / (2 * a);
-        rightX = Math.max(x1, x2);
-        leftX = Math.min(x1, x2);
-        // Clamp to reasonable bounds
-        rightX = Math.max(0.5, Math.min(5, rightX));
-        leftX = Math.max(-5, Math.min(-0.5, leftX));
-    }
+
+        // For downward parabola (a < 0), the logic is the same
+        // Just find the two x values and sort them
+        const sortedX = [x1, x2].sort((p, q) => p - q);
+
+        return {
+            leftX: sortedX[0],
+            rightX: sortedX[1],
+            valid: true,
+        };
+    };
+
+    const intersections = computeIntersections();
+
+    // Only clamp for display bounds, keeping the mathematical relationship intact
+    const leftX = intersections.valid
+        ? Math.max(-5.5, Math.min(-0.3, intersections.leftX))
+        : -2;
+    const rightX = intersections.valid
+        ? Math.max(0.3, Math.min(5.5, intersections.rightX))
+        : 2;
 
     return (
         <div className="relative">
@@ -67,8 +88,8 @@ function IntroParabolaViz() {
                         color: COLOR_A,
                         position: [rightX, fixedY],
                         constrain: (point) => {
-                            // Keep y fixed, only allow horizontal movement
-                            const x = Math.max(0.5, Math.min(5, point[0]));
+                            // Keep y fixed, only allow horizontal movement on positive side
+                            const x = Math.max(0.3, Math.min(5.5, point[0]));
                             return [x, fixedY];
                         },
                         onChange: (point) => {
@@ -76,10 +97,10 @@ function IntroParabolaViz() {
                             // With the point at (x, fixedY): fixedY = ax² + bx + c
                             // So a = (fixedY - bx - c) / x²
                             const x = point[0];
-                            if (x > 0.3) {
+                            if (Math.abs(x) > 0.2) {
                                 const newA = (fixedY - b * x - c) / (x * x);
-                                if (newA > 0.1 && newA <= 3) {
-                                    // Smooth continuous update (no rounding)
+                                // Allow wider range including negative values
+                                if (Math.abs(newA) >= 0.05 && Math.abs(newA) <= 5) {
                                     setVar("coefficientA", Math.round(newA * 20) / 20);
                                 }
                             }
@@ -91,16 +112,16 @@ function IntroParabolaViz() {
                         color: COLOR_A,
                         position: [leftX, fixedY],
                         constrain: (point) => {
-                            // Keep y fixed, only allow horizontal movement
-                            const x = Math.min(-0.5, Math.max(-5, point[0]));
+                            // Keep y fixed, only allow horizontal movement on negative side
+                            const x = Math.min(-0.3, Math.max(-5.5, point[0]));
                             return [x, fixedY];
                         },
                         onChange: (point) => {
                             const x = point[0];
-                            if (x < -0.3) {
+                            if (Math.abs(x) > 0.2) {
                                 const newA = (fixedY - b * x - c) / (x * x);
-                                if (newA > 0.1 && newA <= 3) {
-                                    // Smooth continuous update (no rounding)
+                                // Allow wider range including negative values
+                                if (Math.abs(newA) >= 0.05 && Math.abs(newA) <= 5) {
                                     setVar("coefficientA", Math.round(newA * 20) / 20);
                                 }
                             }
