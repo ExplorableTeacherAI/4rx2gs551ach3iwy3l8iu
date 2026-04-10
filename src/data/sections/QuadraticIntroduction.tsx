@@ -36,28 +36,15 @@ function IntroParabolaViz() {
     const COLOR_C = "#F7B23B"; // Amber for 'c'
     const COLOR_CURVE = "#6366f1"; // Soft indigo for f(x) curve
 
-    // Fixed y-level for the draggable points (they stay at this height)
-    const fixedY = 2;
+    // Use fixed x-positions for the draggable points - they move along the curve
+    // Points are symmetric about the vertex
+    const pointOffset = 2.5; // Distance from vertex on x-axis
+    const rightX = vertexX + pointOffset;
+    const leftX = vertexX - pointOffset;
 
-    // Calculate x positions on the curve at the fixed y level: y = ax² + bx + c
-    // Solving ax² + bx + c = fixedY → ax² + bx + (c - fixedY) = 0
-    // Using quadratic formula: x = (-b ± √(b² - 4a(c - fixedY))) / (2a)
-    const disc = b * b - 4 * a * (c - fixedY);
-
-    // Compute actual intersection points - no clamping that breaks the math
-    let leftX = -2;
-    let rightX = 2;
-    const hasValidIntersection = a !== 0 && disc >= 0;
-
-    if (hasValidIntersection) {
-        const sqrtDisc = Math.sqrt(disc);
-        const x1 = (-b + sqrtDisc) / (2 * a);
-        const x2 = (-b - sqrtDisc) / (2 * a);
-
-        // Sort to get left and right correctly
-        leftX = Math.min(x1, x2);
-        rightX = Math.max(x1, x2);
-    }
+    // Calculate y-values on the curve at these x positions
+    const rightY = a * rightX * rightX + b * rightX + c;
+    const leftY = a * leftX * leftX + b * leftX + c;
 
     return (
         <div className="relative">
@@ -65,46 +52,72 @@ function IntroParabolaViz() {
                 height={350}
                 viewBox={{ x: [-6, 6], y: [-8, 6] }}
                 movablePoints={[
-                    // Right point - drag horizontally at fixed y to change curve width
+                    // Right point - drag along the curve to change steepness
                     {
-                        initial: [rightX, fixedY],
+                        initial: [rightX, rightY],
                         color: COLOR_A,
-                        position: [rightX, fixedY],
+                        position: [rightX, rightY],
                         constrain: (point) => {
-                            // Keep y fixed, allow horizontal movement on positive side
-                            const x = Math.max(0.5, Math.min(5.5, point[0]));
-                            return [x, fixedY];
+                            // Constrain point to stay on the parabola
+                            // User drags vertically, we compute corresponding x that keeps it on curve
+                            const targetY = point[1];
+                            // For y = ax² + bx + c, solve for x given y (on right side of vertex)
+                            // We keep x on the right side of vertex
+                            const clampedY = Math.max(-7, Math.min(5, targetY));
+                            // Compute x from y: ax² + bx + (c - y) = 0
+                            const disc = b * b - 4 * a * (c - clampedY);
+                            if (disc >= 0 && a !== 0) {
+                                const sqrtDisc = Math.sqrt(disc);
+                                const x1 = (-b + sqrtDisc) / (2 * a);
+                                const x2 = (-b - sqrtDisc) / (2 * a);
+                                // Pick the x on the right side of vertex
+                                const newX = a > 0 ? Math.max(x1, x2) : Math.min(x1, x2);
+                                if (newX > vertexX + 0.5 && newX < 5.5) {
+                                    return [newX, clampedY];
+                                }
+                            }
+                            return [rightX, rightY];
                         },
                         onChange: (point) => {
-                            // y = ax² + bx + c at this point
-                            // With the point at (x, fixedY): fixedY = ax² + bx + c
-                            // So a = (fixedY - bx - c) / x²
+                            // Compute new 'a' from the point position
+                            // y = ax² + bx + c → a = (y - bx - c) / x²
                             const x = point[0];
-                            if (Math.abs(x) > 0.3) {
-                                const newA = (fixedY - b * x - c) / (x * x);
-                                // Allow reasonable range
-                                if (newA >= 0.1 && newA <= 3) {
+                            const y = point[1];
+                            if (Math.abs(x - vertexX) > 0.3) {
+                                const newA = (y - b * x - c) / (x * x);
+                                if (Math.abs(newA) >= 0.1 && Math.abs(newA) <= 3) {
                                     setVar("coefficientA", Math.round(newA * 20) / 20);
                                 }
                             }
                         },
                     },
-                    // Left point - mirrors the right point horizontally
+                    // Left point - mirrors the right point
                     {
-                        initial: [leftX, fixedY],
+                        initial: [leftX, leftY],
                         color: COLOR_A,
-                        position: [leftX, fixedY],
+                        position: [leftX, leftY],
                         constrain: (point) => {
-                            // Keep y fixed, allow horizontal movement on negative side
-                            const x = Math.min(-0.5, Math.max(-5.5, point[0]));
-                            return [x, fixedY];
+                            const targetY = point[1];
+                            const clampedY = Math.max(-7, Math.min(5, targetY));
+                            const disc = b * b - 4 * a * (c - clampedY);
+                            if (disc >= 0 && a !== 0) {
+                                const sqrtDisc = Math.sqrt(disc);
+                                const x1 = (-b + sqrtDisc) / (2 * a);
+                                const x2 = (-b - sqrtDisc) / (2 * a);
+                                // Pick the x on the left side of vertex
+                                const newX = a > 0 ? Math.min(x1, x2) : Math.max(x1, x2);
+                                if (newX < vertexX - 0.5 && newX > -5.5) {
+                                    return [newX, clampedY];
+                                }
+                            }
+                            return [leftX, leftY];
                         },
                         onChange: (point) => {
                             const x = point[0];
-                            if (Math.abs(x) > 0.3) {
-                                const newA = (fixedY - b * x - c) / (x * x);
-                                // Allow reasonable range
-                                if (newA >= 0.1 && newA <= 3) {
+                            const y = point[1];
+                            if (Math.abs(x - vertexX) > 0.3) {
+                                const newA = (y - b * x - c) / (x * x);
+                                if (Math.abs(newA) >= 0.1 && Math.abs(newA) <= 3) {
                                     setVar("coefficientA", Math.round(newA * 20) / 20);
                                 }
                             }
@@ -135,15 +148,6 @@ function IntroParabolaViz() {
                         weight: 3,
                         highlightId: "fx",
                     },
-                    // Horizontal line at fixedY showing where the drag points are
-                    {
-                        type: "segment",
-                        point1: [leftX, fixedY],
-                        point2: [rightX, fixedY],
-                        color: COLOR_A,
-                        weight: 2,
-                        style: "dashed",
-                    },
                     // Axis of symmetry (dashed)
                     {
                         type: "segment",
@@ -159,9 +163,9 @@ function IntroParabolaViz() {
                 hintKey="intro-parabola-drag"
                 steps={[
                     {
-                        gesture: "drag-horizontal",
-                        label: "Drag the teal points on the curve to change steepness",
-                        position: { x: "50%", y: "95%" },
+                        gesture: "drag",
+                        label: "Drag the teal points along the curve to change steepness",
+                        position: { x: "70%", y: "30%" },
                     },
                 ]}
             />
